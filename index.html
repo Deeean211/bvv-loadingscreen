@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!--
+	BEAR VS VICTIMS - LADEBILDSCHIRM
+	Wird von Garry's Mod beim Joinen angezeigt (sv_loadingurl in der server.cfg).
+	GMod ruft automatisch GameDetails, SetFilesTotal, SetFilesNeeded,
+	DownloadingFile und SetStatusChanged auf.
+	Ohne GMod (z. B. im Browser) läuft eine Vorschau mit Beispiel-Fortschritt.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Bear vs Victims</title>
+<style>
+	html, body {
+		margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+		background: #080a14; color: #fff;
+		font-family: Roboto, "Segoe UI", Arial, sans-serif;
+	}
+	#bg {
+		position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+		background: radial-gradient(ellipse at 20% 110%, rgba(0,210,255,.22), transparent 55%),
+		            radial-gradient(ellipse at 100% 0%, rgba(180,70,255,.22), transparent 55%),
+		            linear-gradient(135deg, #080a14 0%, #120c26 100%);
+	}
+	#particles { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+	#vignette {
+		position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+		background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%);
+	}
+
+	/* Linke Seite: Titel + Map */
+	#left { position: absolute; left: 7%; top: 14%; width: 52%; }
+	.label { font-size: 15px; font-weight: 700; letter-spacing: 3px; color: #00d2ff; text-transform: uppercase; }
+	#server {
+		margin-top: 10px; font-size: 72px; font-weight: 900; line-height: 1.05; letter-spacing: 1px;
+		text-shadow: 0 0 18px rgba(0,210,255,.85), 0 0 42px rgba(0,210,255,.45);
+		-webkit-animation: pulse 3s ease-in-out infinite; animation: pulse 3s ease-in-out infinite;
+	}
+	@-webkit-keyframes pulse { 0%,100% { text-shadow: 0 0 18px rgba(0,210,255,.85), 0 0 42px rgba(0,210,255,.45); } 50% { text-shadow: 0 0 10px rgba(0,210,255,.6), 0 0 26px rgba(180,70,255,.45); } }
+	@keyframes pulse { 0%,100% { text-shadow: 0 0 18px rgba(0,210,255,.85), 0 0 42px rgba(0,210,255,.45); } 50% { text-shadow: 0 0 10px rgba(0,210,255,.6), 0 0 26px rgba(180,70,255,.45); } }
+	#line { margin-top: 18px; width: 230px; height: 3px; background: linear-gradient(90deg, #00d2ff, #b446ff, transparent); }
+	#tagline { margin-top: 16px; font-size: 22px; color: #c8cddc; }
+
+	.card {
+		background: rgba(10,12,24,.82); border-radius: 14px; padding: 22px 26px; position: relative;
+		box-shadow: 0 10px 40px rgba(0,0,0,.45);
+	}
+	.card:before {
+		content: ""; position: absolute; left: 14px; right: 14px; top: 0; height: 2px;
+		background: linear-gradient(90deg, #00d2ff, #b446ff);
+	}
+	#mapcard { margin-top: 44px; width: 420px; }
+	#mapname { margin-top: 8px; font-size: 40px; font-weight: 800; }
+	#mapfile { margin-top: 4px; font-size: 14px; color: #8c91a5; }
+	#mode { margin-top: 14px; font-size: 15px; color: #c8cddc; }
+	#mode b { color: #ff8228; }
+
+	/* Rechte Seite: Tipps */
+	#right { position: absolute; right: 7%; top: 18%; width: 30%; }
+	#tip { margin-top: 12px; font-size: 22px; line-height: 1.4; min-height: 96px;
+		-webkit-transition: opacity .5s; transition: opacity .5s; }
+	#tipkey {
+		display: inline-block; margin-bottom: 10px; padding: 4px 12px; border-radius: 6px;
+		background: rgba(180,70,255,.25); color: #e3c8ff; font-weight: 800; font-size: 16px; letter-spacing: 1px;
+	}
+	#dots { margin-top: 18px; }
+	#dots span { display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; background: rgba(255,255,255,.18); }
+	#dots span.on { background: #00d2ff; }
+	#features { margin-top: 22px; }
+	.feature { margin-top: 10px; font-size: 16px; color: #c8cddc; }
+	.feature:before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 4px; background: #00d2ff; margin-right: 12px; vertical-align: 1px; }
+
+	/* Unten: Fortschritt */
+	#bottom { position: absolute; left: 7%; right: 7%; bottom: 8%; }
+	#status { font-size: 20px; font-weight: 700; }
+	#percent { float: right; font-size: 20px; font-weight: 800; color: #00d2ff; }
+	#bar { margin-top: 14px; height: 10px; border-radius: 5px; background: rgba(255,255,255,.1); overflow: hidden; }
+	#fill {
+		height: 100%; width: 0%; border-radius: 5px;
+		background: linear-gradient(90deg, #b446ff, #00d2ff);
+		box-shadow: 0 0 14px rgba(0,210,255,.8);
+		-webkit-transition: width .4s; transition: width .4s;
+	}
+	#file { margin-top: 10px; font-size: 14px; color: #8c91a5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	#footer { margin-top: 18px; font-size: 13px; color: #6e7390; }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="particles"></canvas>
+<div id="vignette"></div>
+
+<div id="left">
+	<div class="label" id="welcome">Willkommen auf</div>
+	<div id="server">Bear vs Victims</div>
+	<div id="line"></div>
+	<div id="tagline">Spezialrunden · Pointshop · Level-System</div>
+
+	<div class="card" id="mapcard">
+		<div class="label" id="maplabel">Aktuelle Map</div>
+		<div id="mapname">…</div>
+		<div id="mapfile"></div>
+		<div id="mode"></div>
+	</div>
+</div>
+
+<div id="right">
+	<div class="card">
+		<div class="label" id="tiplabel">Tipp</div>
+		<div id="tip"><div id="tipkey"></div><div id="tiptext"></div></div>
+		<div id="dots"></div>
+	</div>
+	<div id="features"></div>
+</div>
+
+<div id="bottom">
+	<span id="status">Verbinde …</span><span id="percent">0%</span>
+	<div id="bar"><div id="fill"></div></div>
+	<div id="file"></div>
+	<div id="footer"></div>
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Texte (Deutsch / Englisch). GMod liefert die Spielsprache in GameDetails.
+// ---------------------------------------------------------------------------
+var TEXT = {
+	de: {
+		welcome: "Willkommen auf", tagline: "Spezialrunden · Pointshop · Level-System",
+		maplabel: "Aktuelle Map", tiplabel: "Tipp", connecting: "Verbinde …",
+		mode: "Spielmodus:", players: "Plätze", file: "Lade Datei", of: "von",
+		footer: "Tipp: Abonniere unsere Workshop-Kollektion \"Bear vs Victims – Maps\", dann joinst du viel schneller.",
+		features: ["Ein Bär jagt alle anderen – überlebe die Runde!", "9 verrückte Spezialrunden", "Punkte sammeln & im Pointshop ausgeben", "Level durch Spielzeit", "Chat mit Emojis & GIFs"],
+		tips: [
+			["ESC", "Im Hauptmenü findest du Regeln, Hilfe und kannst die Sprache ändern."],
+			["F4", "Im Pointshop kaufst du Hüte, Trails und Spielermodelle."],
+			["F2", "Stimme jederzeit für die nächste Map ab – oder schreib !rtv."],
+			["ALT", "Wechsle zwischen Ego- und Third-Person-Ansicht."],
+			["Y", "Im Chat kannst du Emojis und GIFs verschicken."],
+			["TAB", "Im Scoreboard siehst du Level, Rollen und kannst Spieler stummschalten."],
+			["R", "Als Bär kannst du brüllen – und mit Linksklick zuschlagen."],
+			["!", "Probleme? ESC → Hilfe / Support öffnet ein Ticket an die Moderatoren."]
+		],
+		status: {
+			"Retrieving server info": "Server-Infos werden abgerufen …",
+			"Sending client info": "Sende Spieler-Infos …",
+			"Mounting Addons": "Addons werden geladen …",
+			"Workshop Complete": "Workshop-Inhalte fertig",
+			"Starting Lua": "Lua wird gestartet …",
+			"Lua Started": "Lua gestartet",
+			"Loading": "Lade …",
+			"Downloading": "Herunterladen …",
+			"Parsing game info": "Spielinfos werden gelesen …",
+			"Requesting serverinfo": "Server-Infos werden angefragt …",
+			"Client info sent": "Spieler-Infos gesendet",
+			"Retrieving lua": "Lua-Dateien werden geladen …"
+		}
+	},
+	en: {
+		welcome: "Welcome to", tagline: "Special rounds · Pointshop · Level system",
+		maplabel: "Current map", tiplabel: "Tip", connecting: "Connecting …",
+		mode: "Gamemode:", players: "slots", file: "Downloading file", of: "of",
+		footer: "Tip: subscribe to our Workshop collection \"Bear vs Victims – Maps\" to join much faster.",
+		features: ["A bear hunts everyone else – survive the round!", "9 crazy special rounds", "Collect points & spend them in the pointshop", "Level up through playtime", "Chat with emojis & GIFs"],
+		tips: [
+			["ESC", "The main menu has the rules, help and lets you change the language."],
+			["F4", "Buy hats, trails and player models in the pointshop."],
+			["F2", "Vote for the next map any time – or type !rtv."],
+			["ALT", "Switch between first-person and third-person view."],
+			["Y", "You can send emojis and GIFs in the chat."],
+			["TAB", "The scoreboard shows levels, roles and lets you mute players."],
+			["R", "As the bear you can roar – and left click to swipe."],
+			["!", "Problems? ESC → Help / Support opens a ticket for the moderators."]
+		],
+		status: {}
+	}
+};
+
+// Anzeigenamen der Maps (wie im Map-Voting)
+var MAPS = {
+	gm_construct: ["Baustelle", "Construct"], gm_flatgrass: ["Grüne Wiese", "Flatgrass"],
+	gm_bestbuy: ["Elektromarkt", "Electronics Store"],
+	gm_croftmanor13_waurum: ["Herrenhaus", "Manor"], gm_croftmanor_retro_waurum: ["Herrenhaus 2", "Manor 2"],
+	gm_parallax: ["Parallax", "Parallax"], ttt_dn_hollywoodholocaust_v2: ["Hollywood", "Hollywood"],
+	pvb_lunar_b3a: ["Mondbasis", "Moon Base"], ttt_aztec_shrine: ["Aztekentempel", "Aztec Temple"],
+	ttt_grovestreet_a13: ["Grove Street", "Grove Street"], ttt_hydropower_a2: ["Wasserkraftwerk", "Hydro Plant"],
+	ttt_kakariko_v4a: ["Kakariko", "Kakariko"], ttt_mehhh: ["Mehhh", "Mehhh"],
+	ttt_minecraft_b5c: ["Block-Weihnacht", "Block Christmas"], ttt_museum_heist_v6: ["Museum", "Museum"],
+	ttt_mw2_terminal: ["Flughafen-Terminal", "Airport Terminal"], ttt_oldruins: ["Alte Ruinen", "Old Ruins"],
+	ttt_parkhouse: ["Parkhaus", "Parking Garage"], ttt_plaza_b7: ["Plaza", "Plaza"],
+	ttt_poolparty: ["Poolparty", "Pool Party"], ttt_simpsons_b2: ["Springfield", "Springfield"],
+	zs_krusty_krab_large_v5: ["Krosse Krabbe", "Krusty Krab"], ttt_pelicantown: ["Pelican Town", "Pelican Town"],
+	ttt_bb_teenroom_b2: ["Riesenzimmer", "Giant Room"], zs_castle_keep_snowy: ["Schneeburg", "Snow Castle"],
+	ttt_vegas_casino: ["Casino", "Casino"], nitw_fort_lucenne_mall: ["Einkaufszentrum", "Shopping Mall"],
+	ttt_frontier_land_b2: ["Wilder Westen", "Wild West"], ttt_oot3d_hyrule_castle_town_v1a: ["Burgstadt", "Castle Town"],
+	ttt_rooftops_2016_v1: ["Dächer", "Rooftops"], gm_heavengarden: ["Himmelsgarten", "Heaven Garden"],
+	gm_heavengarden_night: ["Himmelsgarten (Nacht)", "Heaven Garden (Night)"]
+};
+
+var lang = "de", map = "", total = 0, needed = 0, tipIndex = 0, inGmod = false;
+
+function $(id) { return document.getElementById(id); }
+function T() { return TEXT[lang] || TEXT.en; }
+function setText(id, value) { $(id).textContent = value; }
+
+function query(name) {
+	var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
+	return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "";
+}
+
+function applyLanguage() {
+	var t = T();
+	setText("welcome", t.welcome); setText("tagline", t.tagline);
+	setText("maplabel", t.maplabel); setText("tiplabel", t.tiplabel); setText("footer", t.footer);
+	var f = $("features"); f.innerHTML = "";
+	for (var i = 0; i < t.features.length; i++) {
+		var d = document.createElement("div"); d.className = "feature"; d.textContent = t.features[i]; f.appendChild(d);
+	}
+	var dots = $("dots"); dots.innerHTML = "";
+	for (var j = 0; j < t.tips.length; j++) dots.appendChild(document.createElement("span"));
+	showTip(tipIndex);
+	showMap();
+}
+
+function showMap() {
+	if (!map) return;
+	var names = MAPS[map.toLowerCase()];
+	setText("mapname", names ? names[lang === "de" ? 0 : 1] : map);
+	setText("mapfile", names ? map : "");
+}
+
+function showTip(i) {
+	var t = T(), tip = t.tips[i % t.tips.length];
+	setText("tipkey", tip[0]); setText("tiptext", tip[1]);
+	var dots = $("dots").childNodes;
+	for (var k = 0; k < dots.length; k++) dots[k].className = (k === i % t.tips.length) ? "on" : "";
+}
+
+setInterval(function () {
+	$("tip").style.opacity = 0;
+	setTimeout(function () { tipIndex++; showTip(tipIndex); $("tip").style.opacity = 1; }, 500);
+}, 6000);
+
+function updateProgress() {
+	var p = total > 0 ? Math.max(0, Math.min(1, (total - needed) / total)) : 0;
+	$("fill").style.width = Math.round(p * 100) + "%";
+	setText("percent", Math.round(p * 100) + "%");
+}
+
+// ---------------------------------------------------------------------------
+// Von Garry's Mod aufgerufen
+// ---------------------------------------------------------------------------
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language) {
+	inGmod = true;
+	if (language && TEXT[language.substring(0, 2)]) lang = language.substring(0, 2);
+	if (servername) setText("server", servername);
+	map = mapname || map;
+	var mode = $("mode"); mode.innerHTML = "";
+	mode.appendChild(document.createTextNode(T().mode + " "));
+	var b = document.createElement("b"); b.textContent = gamemode || "Bear vs Victims"; mode.appendChild(b);
+	if (maxplayers) mode.appendChild(document.createTextNode("  ·  " + maxplayers + " " + T().players));
+	applyLanguage();
+}
+function SetFilesTotal(t) { inGmod = true; total = t; updateProgress(); }
+function SetFilesNeeded(n) { inGmod = true; needed = n; updateProgress(); }
+function DownloadingFile(name) {
+	inGmod = true;
+	var t = T(), done = total - needed + 1;
+	setText("file", t.file + " " + Math.max(1, done) + " " + t.of + " " + total + ":  " + name);
+}
+function SetStatusChanged(status) {
+	inGmod = true;
+	var key = String(status).replace(/\.+$/, "").replace(/ \(.*\)$/, "");
+	var translated = T().status[key];
+	setText("status", translated || status);
+	if (/Lua Started|Sending client info/.test(status)) { needed = 0; updateProgress(); }
+}
+
+// ---------------------------------------------------------------------------
+// Start
+// ---------------------------------------------------------------------------
+var nl = (navigator.language || "de").substring(0, 2);
+lang = query("lang") || (TEXT[nl] ? nl : "en");
+map = query("map");
+setText("status", T().connecting);
+applyLanguage();
+
+// Vorschau außerhalb von GMod: Beispiel-Fortschritt
+setTimeout(function () {
+	if (inGmod) return;
+	GameDetails("Bear vs Victims | FastDL | Special Rounds", "", map || "ttt_vegas_casino", 24, "", "Bear vs Victims", 1, lang);
+	inGmod = false;
+	var steps = ["Retrieving server info", "Mounting Addons", "Downloading", "Retrieving lua", "Starting Lua"];
+	var s = 0; total = 40; needed = 40;
+	setInterval(function () {
+		if (needed <= 0) { needed = 40; s = 0; }
+		needed -= 1; updateProgress();
+		if (needed % 8 === 0) { SetStatusChanged(steps[s % steps.length]); s++; inGmod = false; }
+		DownloadingFile("materials/neon/texture_" + (40 - needed) + ".vtf"); inGmod = false;
+	}, 350);
+}, 1500);
+
+// ---------------------------------------------------------------------------
+// Partikel-Netz im Hintergrund (wie im Hauptmenü)
+// ---------------------------------------------------------------------------
+(function () {
+	var c = $("particles"), ctx = c.getContext("2d"), pts = [], W, H;
+	function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+	resize(); window.onresize = resize;
+	for (var i = 0; i < 70; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .6, vy: (Math.random() - .5) * .6 });
+	function frame() {
+		ctx.clearRect(0, 0, W, H);
+		for (var i = 0; i < pts.length; i++) {
+			var p = pts[i];
+			p.x += p.vx; p.y += p.vy;
+			if (p.x < 0) p.x += W; if (p.x > W) p.x -= W; if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+			for (var j = i + 1; j < pts.length; j++) {
+				var q = pts[j], dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx * dx + dy * dy);
+				if (d < 150) {
+					ctx.strokeStyle = "rgba(0,210,255," + (0.28 * (1 - d / 150)) + ")";
+					ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+				}
+			}
+			ctx.fillStyle = "rgba(0,210,255,.8)";
+			ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); ctx.fill();
+		}
+		(window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (f) { setTimeout(f, 33); })(frame);
+	}
+	frame();
+})();
+</script>
+</body>
+</html>
