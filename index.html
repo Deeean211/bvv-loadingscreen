@@ -28,8 +28,12 @@
 		background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%);
 	}
 
+	/* Alles ist für 1920x1080 gebaut und wird per JavaScript auf jede Bildschirmgröße skaliert */
+	#ui { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+		-webkit-transform-origin: 0 0; transform-origin: 0 0; }
+
 	/* Linke Seite: Titel + Map */
-	#left { position: absolute; left: 7%; top: 14%; width: 52%; }
+	#left { position: absolute; left: 7%; top: 12%; width: 50%; }
 	.label { font-size: 15px; font-weight: 700; letter-spacing: 3px; color: #00d2ff; text-transform: uppercase; }
 	#server {
 		margin-top: 10px; font-size: 72px; font-weight: 900; line-height: 1.05; letter-spacing: 1px;
@@ -90,6 +94,7 @@
 <canvas id="particles"></canvas>
 <div id="vignette"></div>
 
+<div id="ui">
 <div id="left">
 	<div class="label" id="welcome">Willkommen auf</div>
 	<div id="server">Bear vs Victims</div>
@@ -118,6 +123,7 @@
 	<div id="bar"><div id="fill"></div></div>
 	<div id="file"></div>
 	<div id="footer"></div>
+</div>
 </div>
 
 <script>
@@ -203,6 +209,25 @@ function $(id) { return document.getElementById(id); }
 function T() { return TEXT[lang] || TEXT.en; }
 function setText(id, value) { $(id).textContent = value; }
 
+// Layout auf den Bildschirm skalieren (Design-Größe 1920x1080, zentriert)
+function fitScreen() {
+	var W = window.innerWidth, H = window.innerHeight, s = Math.min(W / 1920, H / 1080);
+	var ui = $("ui"), t = "scale(" + s + ")";
+	ui.style.webkitTransform = t; ui.style.transform = t;
+	ui.style.left = Math.round((W - 1920 * s) / 2) + "px";
+	ui.style.top = Math.round((H - 1080 * s) / 2) + "px";
+}
+
+// Servernamen verkleinern, bis er in höchstens zwei Zeilen passt
+function fitServerName() {
+	var el = $("server"), size = 72;
+	el.style.fontSize = size + "px";
+	while (el.offsetHeight > size * 1.05 * 2 + 4 && size > 30) {
+		size -= 2;
+		el.style.fontSize = size + "px";
+	}
+}
+
 function query(name) {
 	var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
 	return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "";
@@ -253,7 +278,7 @@ function updateProgress() {
 function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language) {
 	inGmod = true;
 	if (language && TEXT[language.substring(0, 2)]) lang = language.substring(0, 2);
-	if (servername) setText("server", servername);
+	if (servername) { setText("server", servername); fitServerName(); }
 	map = mapname || map;
 	var mode = $("mode"); mode.innerHTML = "";
 	mode.appendChild(document.createTextNode(T().mode + " "));
@@ -284,6 +309,9 @@ lang = query("lang") || (TEXT[nl] ? nl : "en");
 map = query("map");
 setText("status", T().connecting);
 applyLanguage();
+fitScreen();
+fitServerName();
+window.addEventListener("resize", fitScreen);
 
 // Vorschau außerhalb von GMod: Beispiel-Fortschritt
 setTimeout(function () {
