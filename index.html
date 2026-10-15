@@ -99,7 +99,7 @@
 	<div class="label" id="welcome">Willkommen auf</div>
 	<div id="server">Bear vs Victims</div>
 	<div id="line"></div>
-	<div id="tagline">Spezialrunden · Pointshop · Level-System</div>
+	<div id="tagline">Special rounds · Coinshop · Crates · Taunts</div>
 
 	<div class="card" id="mapcard">
 		<div class="label" id="maplabel">Aktuelle Map</div>
@@ -128,24 +128,24 @@
 
 <script>
 // ---------------------------------------------------------------------------
-// Texte (Deutsch / Englisch). GMod liefert die Spielsprache in GameDetails.
+// Texte (Deutsch / Englisch). Standard ist Englisch, Deutsch mit ?lang=de im Link.
 // ---------------------------------------------------------------------------
 var TEXT = {
 	de: {
-		welcome: "Willkommen auf", tagline: "Spezialrunden · Pointshop · Level-System",
+		welcome: "Willkommen auf", tagline: "Spezialrunden · Coinshop · Kisten · Taunts",
 		maplabel: "Aktuelle Map", tiplabel: "Tipp", connecting: "Verbinde …",
 		mode: "Spielmodus:", players: "Plätze", file: "Lade Datei", of: "von",
 		footer: "Tipp: Abonniere unsere Workshop-Kollektion \"Bear vs Victims – Maps\", dann joinst du viel schneller.",
-		features: ["Ein Bär jagt alle anderen – überlebe die Runde!", "9 verrückte Spezialrunden", "Punkte sammeln & im Pointshop ausgeben", "Level durch Spielzeit", "Chat mit Emojis & GIFs"],
+		features: ["Ein Bär jagt alle anderen – überlebe die Runde!", "9 verrückte Spezialrunden", "Coins sammeln, Kisten öffnen, Messer & Skins", "Handeln, Marktplatz, Coinflip & Giveaways", "Taunts, Glücksrad & Level-System"],
 		tips: [
 			["ESC", "Im Hauptmenü findest du Regeln, Hilfe und kannst die Sprache ändern."],
-			["F4", "Im Pointshop kaufst du Hüte, Trails und Spielermodelle."],
+			["F4", "Dein Menü: Coinshop, Kisten, Handel, Marktplatz, Personalisieren und mehr."],
 			["F2", "Stimme jederzeit für die nächste Map ab – oder schreib !rtv."],
 			["ALT", "Wechsle zwischen Ego- und Third-Person-Ansicht."],
 			["Y", "Im Chat kannst du Emojis und GIFs verschicken."],
 			["TAB", "Im Scoreboard siehst du Level, Rollen und kannst Spieler stummschalten."],
-			["R", "Als Bär kannst du brüllen – und mit Linksklick zuschlagen."],
-			["!", "Probleme? ESC → Hilfe / Support öffnet ein Ticket an die Moderatoren."]
+			["R", "Taunt! Alle 30 Sekunden, +5 Coins – aber der Bär hört, wo du bist."],
+			["!", "Probleme? F4 → Hilfe & Support öffnet ein Ticket an die Moderatoren."]
 		],
 		status: {
 			"Retrieving server info": "Server-Infos werden abgerufen …",
@@ -163,20 +163,20 @@ var TEXT = {
 		}
 	},
 	en: {
-		welcome: "Welcome to", tagline: "Special rounds · Pointshop · Level system",
+		welcome: "Welcome to", tagline: "Special rounds · Coinshop · Crates · Taunts",
 		maplabel: "Current map", tiplabel: "Tip", connecting: "Connecting …",
 		mode: "Gamemode:", players: "slots", file: "Downloading file", of: "of",
 		footer: "Tip: subscribe to our Workshop collection \"Bear vs Victims – Maps\" to join much faster.",
-		features: ["A bear hunts everyone else – survive the round!", "9 crazy special rounds", "Collect points & spend them in the pointshop", "Level up through playtime", "Chat with emojis & GIFs"],
+		features: ["A bear hunts everyone else – survive the round!", "9 crazy special rounds", "Earn coins, open crates, knives & skins", "Trading, marketplace, coinflip & giveaways", "Taunts, wheel of fortune & level system"],
 		tips: [
 			["ESC", "The main menu has the rules, help and lets you change the language."],
-			["F4", "Buy hats, trails and player models in the pointshop."],
+			["F4", "Your menu: Coinshop, crates, trading, marketplace, personalize and more."],
 			["F2", "Vote for the next map any time – or type !rtv."],
 			["ALT", "Switch between first-person and third-person view."],
 			["Y", "You can send emojis and GIFs in the chat."],
 			["TAB", "The scoreboard shows levels, roles and lets you mute players."],
-			["R", "As the bear you can roar – and left click to swipe."],
-			["!", "Problems? ESC → Help / Support opens a ticket for the moderators."]
+			["R", "Taunt! Every 30 seconds, +5 coins – but the bear hears where you are."],
+			["!", "Problems? F4 → Help & Support opens a ticket for the moderators."]
 		],
 		status: {}
 	}
@@ -203,7 +203,7 @@ var MAPS = {
 	gm_heavengarden_night: ["Himmelsgarten (Nacht)", "Heaven Garden (Night)"]
 };
 
-var lang = "de", map = "", total = 0, needed = 0, tipIndex = 0, inGmod = false;
+var lang = "en", map = "", total = 0, needed = 0, tipIndex = 0, inGmod = false;
 
 function $(id) { return document.getElementById(id); }
 function T() { return TEXT[lang] || TEXT.en; }
@@ -277,7 +277,7 @@ function updateProgress() {
 // ---------------------------------------------------------------------------
 function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language) {
 	inGmod = true;
-	if (language && TEXT[language.substring(0, 2)]) lang = language.substring(0, 2);
+	// Sprache bleibt Englisch (Hauptzielgruppe), außer der Link enthält ?lang=de
 	if (servername) { setText("server", servername); fitServerName(); }
 	map = mapname || map;
 	var mode = $("mode"); mode.innerHTML = "";
@@ -304,8 +304,7 @@ function SetStatusChanged(status) {
 // ---------------------------------------------------------------------------
 // Start
 // ---------------------------------------------------------------------------
-var nl = (navigator.language || "de").substring(0, 2);
-lang = query("lang") || (TEXT[nl] ? nl : "en");
+lang = TEXT[query("lang")] ? query("lang") : "en"; // Standard: Englisch
 map = query("map");
 setText("status", T().connecting);
 applyLanguage();
