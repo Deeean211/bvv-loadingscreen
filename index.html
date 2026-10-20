@@ -374,11 +374,11 @@ function applyEvent() {
 			var top = 40 + Math.random() * 480, dur = 9 + Math.random() * 10, delay = -Math.random() * dur, sc = 0.6 + Math.random() * 0.8;
 			html += '<div class="bat" style="top:' + top + 'px;width:' + (70 * sc) + 'px;height:' + (34 * sc) + 'px;-webkit-animation-duration:' + dur + 's;animation-duration:' + dur + 's;-webkit-animation-delay:' + delay + 's;animation-delay:' + delay + 's">' + BAT + '</div>';
 		}
-		html += '<div class="pumpkin" style="right:60px;bottom:150px">' + PUMPKIN(150) + '</div>';
-		html += '<div class="pumpkin" style="right:210px;bottom:150px">' + PUMPKIN(95) + '</div>';
+		html += '<div class="pumpkin" style="right:60px;bottom:-8px">' + PUMPKIN(125) + '</div>';
+		html += '<div class="pumpkin" style="right:190px;bottom:-4px">' + PUMPKIN(80) + '</div>';
 	} else if (e.decor === "snow") {
 		SNOW = true;
-		html += '<div class="tree" style="right:70px;bottom:150px">' + TREE + '</div>';
+		html += '<div class="tree" style="right:60px;bottom:-6px;-webkit-transform:scale(.7);transform:scale(.7);-webkit-transform-origin:100% 100%;transform-origin:100% 100%">' + TREE + '</div>';
 	}
 	decor.innerHTML = html;
 }
