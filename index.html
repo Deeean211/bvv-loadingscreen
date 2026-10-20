@@ -88,6 +88,27 @@
 	}
 	#file { margin-top: 10px; font-size: 14px; color: #8c91a5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 	#footer { margin-top: 18px; font-size: 13px; color: #6e7390; }
+
+	/* Aktuelles Event (Halloween, Weihnachten …) – Banner + Dekoration */
+	#eventcard { display: none; margin-bottom: 18px; padding: 18px 22px 18px 96px; border-radius: 14px; position: relative;
+		background: linear-gradient(90deg, rgba(255,130,30,.45), rgba(255,130,30,.12)); box-shadow: 0 10px 40px rgba(0,0,0,.45); }
+	#eventicon { position: absolute; left: 22px; top: 50%; margin-top: -30px; width: 60px; height: 60px;
+		-webkit-animation: bob 2.4s ease-in-out infinite; animation: bob 2.4s ease-in-out infinite; }
+	@-webkit-keyframes bob { 0%,100% { -webkit-transform: translateY(0) rotate(-4deg); } 50% { -webkit-transform: translateY(-6px) rotate(4deg); } }
+	@keyframes bob { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
+	#eventlabel { font-size: 13px; font-weight: 700; letter-spacing: 3px; color: rgba(255,255,255,.8); }
+	#eventname { margin-top: 4px; font-size: 30px; font-weight: 900; }
+	#eventdesc { margin-top: 6px; font-size: 16px; color: rgba(255,255,255,.9); }
+	#decor { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
+	.bat { position: absolute; width: 70px; height: 34px; opacity: .85;
+		-webkit-animation: fly linear infinite; animation: fly linear infinite; }
+	@-webkit-keyframes fly { from { -webkit-transform: translateX(-120px); } to { -webkit-transform: translateX(2100px); } }
+	@keyframes fly { from { transform: translateX(-120px); } to { transform: translateX(2100px); } }
+	.bat svg { width: 100%; height: 100%; -webkit-animation: flap .35s ease-in-out infinite alternate; animation: flap .35s ease-in-out infinite alternate; }
+	@-webkit-keyframes flap { from { -webkit-transform: scaleY(1); } to { -webkit-transform: scaleY(.45); } }
+	@keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(.45); } }
+	.pumpkin { position: absolute; -webkit-filter: drop-shadow(0 0 24px rgba(255,120,20,.8)); }
+	.tree { position: absolute; -webkit-filter: drop-shadow(0 0 20px rgba(90,200,255,.6)); }
 </style>
 </head>
 <body>
@@ -96,6 +117,7 @@
 <div id="vignette"></div>
 
 <div id="ui">
+<div id="decor"></div>
 <div id="left">
 	<svg xmlns="http://www.w3.org/2000/svg" id="logo" viewBox="0 0 1024 1024"><defs><linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00d2ff"/><stop offset="1" stop-color="#b446ff"/></linearGradient><filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="a"/><feGaussianBlur in="SourceGraphic" stdDeviation="26" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="a"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="glowP" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="12" result="a"/><feMerge><feMergeNode in="a"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="glowR" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="a"/><feGaussianBlur in="SourceGraphic" stdDeviation="22" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="a"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g transform="translate(512 540) scale(0.92) translate(-512 -540)"><g id="bear"><g filter="url(#glowP)" fill="#b446ff" opacity="0.9"><path d="M770,150 L800,160 L560,900 L548,880 Z"/><path d="M860,200 L888,212 L660,930 L648,908 Z"/><path d="M680,120 L708,128 L470,860 L460,842 Z"/></g><g filter="url(#glow)" stroke="url(#neon)" stroke-width="24" fill="#0b0a1e"><circle cx="318" cy="318" r="98"/><circle cx="706" cy="318" r="98"/></g><g fill="none" stroke="#b446ff" stroke-width="14" opacity="0.85" filter="url(#glowP)"><circle cx="318" cy="318" r="46"/><circle cx="706" cy="318" r="46"/></g><path filter="url(#glow)" stroke="url(#neon)" stroke-width="26" fill="#0b0a1e" stroke-linejoin="round" d="M512,300 C700,300 790,400 790,540 C790,690 680,790 512,790 C344,790 234,690 234,540 C234,400 324,300 512,300 Z"/><g filter="url(#glowR)" fill="#ff3a6e"><path d="M372,468 L478,520 L472,552 Q418,560 384,520 Z"/><path d="M652,468 L546,520 L552,552 Q606,560 640,520 Z"/></g><g fill="#fff"><circle cx="440" cy="530" r="9"/><circle cx="584" cy="530" r="9"/></g><ellipse filter="url(#glow)" cx="512" cy="650" rx="118" ry="86" fill="#0b0a1e" stroke="url(#neon)" stroke-width="18"/><path filter="url(#glow)" fill="#00d2ff" d="M466,602 L558,602 Q572,606 556,626 L524,652 Q512,662 500,652 L468,626 Q452,606 466,602 Z"/><path filter="url(#glow)" fill="none" stroke="#00d2ff" stroke-width="12" stroke-linecap="round" d="M512,660 L512,690 M512,690 Q478,716 448,692 M512,690 Q546,716 576,692"/><g fill="#ffffff" filter="url(#glow)"><path d="M474,700 L490,706 L480,736 Z"/><path d="M550,700 L534,706 L544,736 Z"/></g></g></g></svg>
 	<div class="label" id="welcome">Willkommen auf</div>
@@ -112,6 +134,12 @@
 </div>
 
 <div id="right">
+	<div id="eventcard">
+		<div id="eventicon"></div>
+		<div id="eventlabel">CURRENT EVENT</div>
+		<div id="eventname"></div>
+		<div id="eventdesc"></div>
+	</div>
 	<div class="card">
 		<div class="label" id="tiplabel">Tipp</div>
 		<div id="tip"><div id="tipkey"></div><div id="tiptext"></div></div>
@@ -304,12 +332,65 @@ function SetStatusChanged(status) {
 }
 
 // ---------------------------------------------------------------------------
+// Aktuelles Event (gleiche Zeiträume wie sh_events.lua auf dem Server)
+// ---------------------------------------------------------------------------
+var EVENTS = [
+	{ id: "halloween", from: [10, 16], to: [11, 2], color: "255,130,30", decor: "halloween", emoji: "1f383",
+	  name: ["Halloween", "Halloween"], desc: ["Gruselige Kiste, Kürbis-Hüte und mehr Coins (am Wochenende doppelt)!", "Spooky crate, pumpkin hats and more coins (double on weekends)!"] },
+	{ id: "christmas", from: [12, 1], to: [12, 26], color: "90,200,255", decor: "snow", emoji: "1f384",
+	  name: ["Weihnachten", "Christmas"], desc: ["Schnee im Menü und mehr Coins für jede Runde!", "Snow in the menu and more coins every round!"] }
+];
+var PCOL = "0,210,255", SNOW = false;
+
+function activeEvent() {
+	var d = new Date(), today = (d.getMonth() + 1) * 100 + d.getDate();
+	for (var i = 0; i < EVENTS.length; i++) {
+		var e = EVENTS[i], a = e.from[0] * 100 + e.from[1], b = e.to[0] * 100 + e.to[1];
+		if ((a <= b && today >= a && today <= b) || (a > b && (today >= a || today <= b))) return e;
+	}
+	return null;
+}
+
+var BAT = '<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg"><path fill="#1a0f22" stroke="rgba(255,130,30,.6)" stroke-width="1.5" d="M50 18 C46 10 42 10 40 16 C34 8 22 6 10 12 C18 16 20 22 18 28 C26 24 32 26 36 32 C40 28 44 28 46 30 L50 36 L54 30 C56 28 60 28 64 32 C68 26 74 24 82 28 C80 22 82 16 90 12 C78 6 66 8 60 16 C58 10 54 10 50 18 Z"/></svg>';
+var PUMPKIN = function (s) { return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 22 C52 12 58 8 62 8" stroke="#3c7a22" stroke-width="6" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="60" rx="22" ry="30" fill="#e8650f"/><ellipse cx="68" cy="60" rx="22" ry="30" fill="#e8650f"/><ellipse cx="50" cy="60" rx="24" ry="33" fill="#ff7f1f"/><path d="M34 52 L44 46 L42 58 Z M66 52 L56 46 L58 58 Z" fill="#ffe27a"/><path d="M32 70 Q50 86 68 70 L62 72 L58 68 L54 74 L50 69 L46 74 L42 68 L38 72 Z" fill="#ffe27a"/></svg>'; };
+var TREE = '<svg width="150" height="190" viewBox="0 0 100 126" xmlns="http://www.w3.org/2000/svg"><polygon points="50,4 52,10 58,10 53,14 55,20 50,16 45,20 47,14 42,10 48,10" fill="#ffd84a"/><polygon points="50,14 78,52 64,52 88,86 66,86 94,116 6,116 34,86 12,86 36,52 22,52" fill="#1f8a4c"/><rect x="43" y="116" width="14" height="10" fill="#7a4a24"/><circle cx="40" cy="60" r="4" fill="#ff4a6e"/><circle cx="62" cy="76" r="4" fill="#5ac8ff"/><circle cx="34" cy="96" r="4" fill="#ffd84a"/><circle cx="68" cy="100" r="4" fill="#ff4a6e"/></svg>';
+
+function applyEvent() {
+	var e = activeEvent();
+	if (!e) return;
+	var de = lang === "de" ? 0 : 1, card = $("eventcard");
+	card.style.display = "block";
+	card.style.background = "linear-gradient(90deg, rgba(" + e.color + ",.45), rgba(" + e.color + ",.12))";
+	$("eventlabel").textContent = lang === "de" ? "AKTUELLES EVENT" : "CURRENT EVENT";
+	var to = ("0" + e.to[1]).slice(-2) + "." + ("0" + e.to[0]).slice(-2) + ".";
+	$("eventname").textContent = e.name[de] + "  ·  " + (lang === "de" ? "bis " : "until ") + to;
+	$("eventdesc").textContent = e.desc[de];
+	$("eventicon").innerHTML = '<img width="60" height="60" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/' + e.emoji + '.png">';
+	PCOL = e.color;
+	var decor = $("decor"), html = "";
+	if (e.decor === "halloween") {
+		$("bg").style.background = "radial-gradient(ellipse at 20% 110%, rgba(255,110,20,.32), transparent 55%), radial-gradient(ellipse at 100% 0%, rgba(140,40,220,.28), transparent 55%), linear-gradient(135deg, #0b0710 0%, #1a0c1e 100%)";
+		for (var i = 0; i < 8; i++) {
+			var top = 40 + Math.random() * 480, dur = 9 + Math.random() * 10, delay = -Math.random() * dur, sc = 0.6 + Math.random() * 0.8;
+			html += '<div class="bat" style="top:' + top + 'px;width:' + (70 * sc) + 'px;height:' + (34 * sc) + 'px;-webkit-animation-duration:' + dur + 's;animation-duration:' + dur + 's;-webkit-animation-delay:' + delay + 's;animation-delay:' + delay + 's">' + BAT + '</div>';
+		}
+		html += '<div class="pumpkin" style="right:60px;bottom:150px">' + PUMPKIN(150) + '</div>';
+		html += '<div class="pumpkin" style="right:210px;bottom:150px">' + PUMPKIN(95) + '</div>';
+	} else if (e.decor === "snow") {
+		SNOW = true;
+		html += '<div class="tree" style="right:70px;bottom:150px">' + TREE + '</div>';
+	}
+	decor.innerHTML = html;
+}
+
+// ---------------------------------------------------------------------------
 // Start
 // ---------------------------------------------------------------------------
 lang = TEXT[query("lang")] ? query("lang") : "en"; // Standard: Englisch
 map = query("map");
 setText("status", T().connecting);
 applyLanguage();
+applyEvent();
 fitScreen();
 fitServerName();
 window.addEventListener("resize", fitScreen);
@@ -337,8 +418,18 @@ setTimeout(function () {
 	function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
 	resize(); window.onresize = resize;
 	for (var i = 0; i < 70; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .6, vy: (Math.random() - .5) * .6 });
+	var flakes = [];
+	for (var k = 0; k < 160; k++) flakes.push({ x: Math.random() * W, y: Math.random() * H, v: .5 + Math.random() * 1.4, r: .8 + Math.random() * 2.4, p: Math.random() * 6 });
 	function frame() {
 		ctx.clearRect(0, 0, W, H);
+		if (SNOW) { // Weihnachten: Schnee
+			ctx.fillStyle = "rgba(255,255,255,.75)";
+			for (var s = 0; s < flakes.length; s++) {
+				var f = flakes[s]; f.y += f.v; f.p += .02;
+				if (f.y > H) { f.y = -4; f.x = Math.random() * W; }
+				ctx.beginPath(); ctx.arc(f.x + Math.sin(f.p) * 10, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+			}
+		}
 		for (var i = 0; i < pts.length; i++) {
 			var p = pts[i];
 			p.x += p.vx; p.y += p.vy;
@@ -346,11 +437,11 @@ setTimeout(function () {
 			for (var j = i + 1; j < pts.length; j++) {
 				var q = pts[j], dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx * dx + dy * dy);
 				if (d < 150) {
-					ctx.strokeStyle = "rgba(0,210,255," + (0.28 * (1 - d / 150)) + ")";
+					ctx.strokeStyle = "rgba(" + PCOL + "," + (0.28 * (1 - d / 150)) + ")";
 					ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
 				}
 			}
-			ctx.fillStyle = "rgba(0,210,255,.8)";
+			ctx.fillStyle = "rgba(" + PCOL + ",.8)";
 			ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); ctx.fill();
 		}
 		(window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (f) { setTimeout(f, 33); })(frame);
