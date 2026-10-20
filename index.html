@@ -360,7 +360,7 @@ function applyEvent() {
 	if (!e) return;
 	var de = lang === "de" ? 0 : 1, card = $("eventcard");
 	card.style.display = "block";
-	card.style.background = "linear-gradient(90deg, rgba(" + e.color + ",.45), rgba(" + e.color + ",.12))";
+	card.style.background = "-webkit-linear-gradient(left, rgba(" + e.color + ",.45), rgba(" + e.color + ",.12))"; card.style.background = "linear-gradient(90deg, rgba(" + e.color + ",.45), rgba(" + e.color + ",.12))"; // alte GMod-Browser brauchen -webkit-
 	$("eventlabel").textContent = lang === "de" ? "AKTUELLES EVENT" : "CURRENT EVENT";
 	var to = ("0" + e.to[1]).slice(-2) + "." + ("0" + e.to[0]).slice(-2) + ".";
 	$("eventname").textContent = e.name[de] + "  ·  " + (lang === "de" ? "bis " : "until ") + to;
@@ -369,7 +369,7 @@ function applyEvent() {
 	PCOL = e.color;
 	var decor = $("decor"), html = "";
 	if (e.decor === "halloween") {
-		$("bg").style.background = "radial-gradient(ellipse at 20% 110%, rgba(255,110,20,.32), transparent 55%), radial-gradient(ellipse at 100% 0%, rgba(140,40,220,.28), transparent 55%), linear-gradient(135deg, #0b0710 0%, #1a0c1e 100%)";
+		$("bg").style.background = "-webkit-radial-gradient(20% 110%, ellipse cover, rgba(255,110,20,.32), transparent 55%), -webkit-radial-gradient(100% 0%, ellipse cover, rgba(140,40,220,.28), transparent 55%), -webkit-linear-gradient(-45deg, #0b0710 0%, #1a0c1e 100%)"; $("bg").style.background = "radial-gradient(ellipse at 20% 110%, rgba(255,110,20,.32), transparent 55%), radial-gradient(ellipse at 100% 0%, rgba(140,40,220,.28), transparent 55%), linear-gradient(135deg, #0b0710 0%, #1a0c1e 100%)";
 		for (var i = 0; i < 8; i++) {
 			var top = 40 + Math.random() * 480, dur = 9 + Math.random() * 10, delay = -Math.random() * dur, sc = 0.6 + Math.random() * 0.8;
 			html += '<div class="bat" style="top:' + top + 'px;width:' + (70 * sc) + 'px;height:' + (34 * sc) + 'px;-webkit-animation-duration:' + dur + 's;animation-duration:' + dur + 's;-webkit-animation-delay:' + delay + 's;animation-delay:' + delay + 's">' + BAT + '</div>';
